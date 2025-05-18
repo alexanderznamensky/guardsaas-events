@@ -1,10 +1,44 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "title": "Настройки GuardSaaS",
-                "description": "Укажите данные для доступа к GuardSaaS"
-            }
+  "config": {
+    "step": {
+      "user": {
+        "title": "Настройки GuardSaaS",
+        "description": "Укажите данные для доступа к GuardSaaS",
+        "data": {
+          "_username": "Имя пользователя",
+          "_password": "Пароль",
+          "target_object": "Объект (например, шлагбаум)",
+          "scan_interval": "Интервал сканирования (минуты)",
+          "limit": "Количество получаемых событий"
         }
+      }
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Настройки GuardSaaS",
+        "description": "Измените параметры интеграции GuardSaaS",
+        "data": {
+          "_username": "Имя пользователя",
+          "_password": "Пароль",
+          "target_object": "Объект (например, шлагбаум)",
+          "scan_interval": "Интервал сканирования (минуты)",
+          "limit": "Количество получаемых событий"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "guardsaas_sensor": {
+        "state_attributes": {
+          "time": "Время",
+          "number": "Пользователь",
+          "department": "Статус",
+          "position": "Телефон"
+        }
+      }
+    }
+  }
 }

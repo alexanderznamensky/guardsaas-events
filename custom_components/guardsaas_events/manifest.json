@@ -7,9 +7,9 @@
     "requests",
     "beautifulsoup4"
   ],
+  "dependencies": [],
   "codeowners": ["@alexanderznamensky"],
-  "requirements": [],
   "iot_class": "cloud_polling",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "config_flow": true
 }
