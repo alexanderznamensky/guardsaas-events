@@ -1,0 +1,10 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Настройки GuardSaaS",
+                "description": "Укажите данные для доступа к GuardSaaS"
+            }
+        }
+    }
+}
