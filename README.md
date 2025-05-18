@@ -1,1 +1,1 @@
-GuardSaas
+GuardSaaS Events for Home Assistant
