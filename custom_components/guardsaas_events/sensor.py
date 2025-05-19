@@ -82,7 +82,8 @@ def fetch_guardsaas_data(config):
                         "time": last_event.get("time"),
                         "number": emp.get("number"),
                         "department": emp.get("department"),
-                        "position": emp.get("position")
+                        "position": emp.get("position"),
+                        "comment": emp.get("comment")
                     }
                     _LOGGER.debug(f"Найден пользователь: {clean_name}")
                     return {"state": state, "attrs": attrs}
