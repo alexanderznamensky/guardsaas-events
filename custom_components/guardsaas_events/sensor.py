@@ -75,8 +75,12 @@ def fetch_guardsaas_data(config):
                 emp = next((e for e in items if str(e.get('id') or e.get('employeeid')) == str(employeeid_from_event)), None)
                 if emp:
                     raw_name = emp.get("name") or last_event.get("employee") or ""
-                    match = re.search(r'([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+(?:\s*\([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\))?\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+)', raw_name)
-                    clean_name = match.group(0) if match else raw_name
+                    # Шаг 1. Убрать ведущие цифры или ***
+                    raw_name = re.sub(r'^(?:\d+|\*{3})\s*', '', raw_name)
+                    # Шаг 2. Убрать последние 12 символов (телефон, пробелы и пр.)
+                    clean_name = raw_name[:-12].rstrip() if len(raw_name) > 12 else raw_name
+                    # match = re.search(r'([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+(?:\s*\([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\))?\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+)', raw_name)
+                    # clean_name = match.group(0) if match else raw_name
                     state = clean_name
                     attrs = {
                         "time": last_event.get("time"),
