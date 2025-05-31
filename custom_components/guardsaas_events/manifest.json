@@ -10,6 +10,7 @@
   "dependencies": [],
   "codeowners": ["@alexanderznamensky"],
   "iot_class": "cloud_polling",
-  "version": "1.0.6",
-  "config_flow": true
+  "version": "1.0.8",
+  "config_flow": true,
+  "translations": ["en.json", "ru.json"]
 }

@@ -1,2 +1,2 @@
 DOMAIN = "guardsaas_events"
-SENSOR = "guardsaas_sensor"
+GUARDSAAS_BASE_URL = "https://app.guardsaas.ru"

@@ -3,28 +3,45 @@
     "step": {
       "user": {
         "title": "Настройки GuardSaaS",
-        "description": "Укажите данные для доступа к GuardSaaS",
+        "description": "Укажите данные для входа",
         "data": {
           "_username": "Имя пользователя",
-          "_password": "Пароль",
-          "target_object": "Объект (например, шлагбаум)",
+          "_password": "Пароль"
+        }
+      },
+      "select_object": {
+        "title": "Выбор объекта",
+        "description": "Выберите объект из списка",
+        "data": {
+          "target_object": "Объект (например, шлагбаум)"
+        }
+      },
+      "advanced_options": {
+        "title": "Дополнительные настройки",
+        "description": "Настройка параметров сканирования",
+        "data": {
           "scan_interval": "Интервал сканирования (минуты)",
-          "limit": "Количество получаемых событий"
+          "limit": "Количество получаемых событий",
+          "enabled": "Включение опроса"
         }
       }
+    },
+    "error": {
+      "already_configured": "Этот объект уже добавлен.",
+      "cannot_connect": "Не удалось подключиться к GuardSaaS",
+      "invalid_auth": "Неверное имя пользователя или пароль",
+      "invalid_selection": "Неверный выбор"
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Настройки GuardSaaS",
-        "description": "Измените параметры интеграции GuardSaaS",
+        "title": "Параметры GuardSaaS",
+        "description": "{description}",
         "data": {
-          "_username": "Имя пользователя",
-          "_password": "Пароль",
-          "target_object": "Объект (например, шлагбаум)",
           "scan_interval": "Интервал сканирования (минуты)",
-          "limit": "Количество получаемых событий"
+          "limit": "Количество получаемых событий",
+          "enabled": "Включение опроса"
         }
       }
     }
@@ -34,12 +51,18 @@
       "guardsaas_sensor": {
         "state_attributes": {
           "time": "Время",
-          "number": "Пользователь",
+          "number": "Квартира/Помещение",
           "department": "Статус",
           "position": "Телефон",
           "comment": "Автомобиль"
         }
       }
     }
+  },
+  "errors": {
+    "invalid_auth": "Неверное имя пользователя или пароль",
+    "cannot_connect": "Не удалось подключиться к GuardSaaS",
+    "already_configured": "Этот объект уже добавлен.",
+    "invalid_selection": "Неверный выбор"
   }
 }

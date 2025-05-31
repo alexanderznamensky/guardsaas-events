@@ -5,13 +5,21 @@ import requests
 from bs4 import BeautifulSoup
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, CoordinatorEntity
+from homeassistant.components.sensor import SensorEntityDescription
+
+from .const import GUARDSAAS_BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
+
+SENSOR_DESCRIPTION = SensorEntityDescription(
+    key="guardsaas_sensor",
+    translation_key="guardsaas_sensor",
+    name="GuardSaaS Sensor"
+)
 
 def fetch_guardsaas_data(config):
     try:
         CONFIG = {
-            'base_url': 'https://app.guardsaas.ru',
             'credentials': {
                 '_username': config["_username"],
                 '_password': config["_password"],
@@ -19,20 +27,23 @@ def fetch_guardsaas_data(config):
             },
             'target_object': config["target_object"],
             'target_eventid': 4,
-            'employee_url': 'https://app.guardsaas.ru/employee/list/export',
             'limit': int(config.get("limit", 25)),
         }
 
         session = requests.Session()
-        login_page = session.get(f"{CONFIG['base_url']}/login", timeout=20)
+        login_page = session.get(f"{GUARDSAAS_BASE_URL}/login", timeout=20)
         soup = BeautifulSoup(login_page.text, 'html.parser')
         csrf_token = soup.find('input', {'name': '_csrf_token'})['value']
 
         auth_data = {**CONFIG['credentials'], '_csrf_token': csrf_token}
-        session.post(f"{CONFIG['base_url']}/login_check", data=auth_data, timeout=20)
+
+        login_response = session.post(f"{GUARDSAAS_BASE_URL}/login_check", data=auth_data, timeout=20)
+        if 'logout' not in login_response.text and '/login' in login_response.url:
+            _LOGGER.error("Неуспешная авторизация в GuardSaaS. Проверьте логин/пароль.")
+            return {"state": "Ошибка авторизации", "attrs": {"error": "Неверные учётные данные"}}
 
         params = {"limit": CONFIG['limit']}
-        response = session.get(f"{CONFIG['base_url']}/reports/events/export", params=params, timeout=20)
+        response = session.get(f"{GUARDSAAS_BASE_URL}/reports/events/export", params=params, timeout=20)
         data = response.json()
         current_time = datetime.now()
         items = data.get('items', [])
@@ -63,7 +74,7 @@ def fetch_guardsaas_data(config):
 
         if last_event:
             employeeid_from_event = last_event.get('employeeid')
-            emp_response = session.get(CONFIG['employee_url'], timeout=20)
+            emp_response = session.get(f"{GUARDSAAS_BASE_URL}/employee/list/export", timeout=20)
             try:
                 emp_data = emp_response.json()
                 if isinstance(emp_data, list):
@@ -75,12 +86,8 @@ def fetch_guardsaas_data(config):
                 emp = next((e for e in items if str(e.get('id') or e.get('employeeid')) == str(employeeid_from_event)), None)
                 if emp:
                     raw_name = emp.get("name") or last_event.get("employee") or ""
-                    # Шаг 1. Убрать ведущие цифры или ***
                     raw_name = re.sub(r'^(?:\d+|\*{3})\s*', '', raw_name)
-                    # Шаг 2. Убрать последние 12 символов (телефон, пробелы и пр.)
                     clean_name = raw_name[:-12].rstrip() if len(raw_name) > 12 else raw_name
-                    # match = re.search(r'([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+(?:\s*\([А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\))?\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+\s+[А-ЯЁA-Z][а-яёa-zA-ZЁ\-]+)', raw_name)
-                    # clean_name = match.group(0) if match else raw_name
                     state = clean_name
                     attrs = {
                         "time": last_event.get("time"),
@@ -104,16 +111,22 @@ def fetch_guardsaas_data(config):
         return {"state": "Ошибка", "attrs": {"error": str(e)}}
     finally:
         try:
-            session.get(f"{CONFIG['base_url']}/logout", timeout=20)
+            session.get(f"{GUARDSAAS_BASE_URL}/logout", timeout=20)
         except Exception:
             pass
 
 async def async_setup_entry(hass, entry, async_add_entities):
+    # _LOGGER.debug("sensor.py — ENTRY OPTIONS: %s", entry.options)
+    # _LOGGER.debug("sensor.py — ENTRY DATA: %s", entry.data)
     config = {**entry.data, **(entry.options or {})}
+
     scan_interval = int(config.get("scan_interval", 1))
     update_interval = timedelta(minutes=scan_interval)
 
     async def async_update_data():
+        if not config.get("enabled", True):
+            _LOGGER.debug("Sensor update skipped because it is disabled")
+            return
         return await hass.async_add_executor_job(fetch_guardsaas_data, config)
 
     coordinator = DataUpdateCoordinator(
@@ -129,14 +142,24 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entity = GuardSaaSSensor(coordinator, config)
     async_add_entities([entity])
 
+
 class GuardSaaSSensor(CoordinatorEntity):
     """Representation of a GuardSaaS sensor."""
 
     def __init__(self, coordinator, config):
         super().__init__(coordinator)
         self._config = config
+
+        self.entity_description = SENSOR_DESCRIPTION
+        self._attr_translation_key = "guardsaas_sensor"
+
         self._name = f"GuardSaaS - {self._config.get('target_object', 'Sensor')}"
         self._unique_id = f"guardsaas_{self._config.get('target_object','sensor').lower().replace(' ','_')}"
+        self.entity_description = SensorEntityDescription(
+            key="guardsaas_sensor",
+            translation_key="guardsaas_sensor",
+            name="GuardSaaS Sensor"
+        )
 
     @property
     def name(self):
@@ -148,11 +171,26 @@ class GuardSaaSSensor(CoordinatorEntity):
 
     @property
     def state(self):
-        return self.coordinator.data.get("state") if self.coordinator.data else "Ошибка"
+        if not self._config.get("enabled", True):
+            return "Отключено"
+        if not self.coordinator.data:
+            return "Нет данных"
+        return self.coordinator.data.get("state", "Ошибка")
 
     @property
     def extra_state_attributes(self):
-        return self.coordinator.data.get("attrs", {}) if self.coordinator.data else {}
+        data = self.coordinator.data
+        if not data or not isinstance(data, dict):
+            return {}
+
+        attrs = data.get("attrs", {})
+        return {
+            "Время": attrs.get("time"),
+            "Квартира/Помещение": attrs.get("number"),
+            "Статус": attrs.get("department"),
+            "Телефон": attrs.get("position"),
+            "Автомобиль": attrs.get("comment"),
+        }
 
     @property
     def icon(self):
