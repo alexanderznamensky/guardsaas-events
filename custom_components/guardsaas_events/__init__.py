@@ -1,4 +1,5 @@
 import logging
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
@@ -6,18 +7,20 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+PLATFORMS = ["sensor", "button"]
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.debug("Setting up GuardSaaS entry: %s", entry.title)
     _LOGGER.debug("Entry DATA: %s", entry.data)
     _LOGGER.debug("Entry OPTIONS: %s", entry.options)
-    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.debug("Unloading GuardSaaS entry: %s", entry.title)
-    return await hass.config_entries.async_unload_platforms(entry, ["sensor"])
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:

@@ -10,24 +10,24 @@
         }
       },
       "select_object": {
-        "title": "Выбор объекта",
-        "description": "Выберите объект из списка",
+        "title": "Выбор объектов",
+        "description": "Отметьте один или несколько объектов",
         "data": {
-          "target_object": "Объект (например, шлагбаум)"
+          "target_objects": "Объекты"
         }
       },
-      "advanced_options": {
-        "title": "Дополнительные настройки",
-        "description": "Настройка параметров сканирования",
+      "object_options": {
+        "title": "Настройки объекта",
+        "description": "Объект {current} из {total}: {object_name}. Укажите параметры только для этого объекта.",
         "data": {
           "scan_interval": "Интервал сканирования (минуты)",
           "limit": "Количество получаемых событий",
-          "enabled": "Включение опроса"
+          "enabled": "Включить опрос"
         }
       }
     },
     "error": {
-      "already_configured": "Этот объект уже добавлен.",
+      "already_configured": "Один или несколько выбранных объектов уже добавлены.",
       "cannot_connect": "Не удалось подключиться к GuardSaaS",
       "invalid_auth": "Неверное имя пользователя или пароль",
       "invalid_selection": "Неверный выбор"
@@ -35,15 +35,19 @@
   },
   "options": {
     "step": {
-      "init": {
-        "title": "Параметры GuardSaaS",
-        "description": "{description}",
+      "object_options": {
+        "title": "Параметры объекта",
+        "description": "Объект {current} из {total}: {object_name}. Измените параметры только для этого объекта.",
         "data": {
           "scan_interval": "Интервал сканирования (минуты)",
           "limit": "Количество получаемых событий",
-          "enabled": "Включение опроса"
+          "enabled": "Включить опрос"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Не удалось подключиться к GuardSaaS",
+      "invalid_selection": "Неверный выбор"
     }
   },
   "entity": {
@@ -56,13 +60,38 @@
           "position": "Телефон",
           "comment": "Автомобиль"
         }
+      },
+      "balance": {
+        "name": "Баланс",
+        "state_attributes": {
+          "raw_balance": "Исходный баланс",
+          "all_balances": "Все найденные значения",
+          "conversion": "Формула пересчёта",
+          "str_value": "Баланс с двумя знаками",
+          "formatted_balance": "Баланс с валютой",
+          "error": "Ошибка"
+        }
+      },
+      "payment_date": {
+        "name": "Дата оплаты",
+        "state_attributes": {
+          "raw_date": "Исходная дата",
+          "days_left": "Дней осталось",
+          "message": "Сообщение",
+          "error": "Ошибка"
+        }
+      }
+    },
+    "button": {
+      "open_object": {
+        "name": "Открыть устройство"
       }
     }
   },
   "errors": {
     "invalid_auth": "Неверное имя пользователя или пароль",
     "cannot_connect": "Не удалось подключиться к GuardSaaS",
-    "already_configured": "Этот объект уже добавлен.",
+    "already_configured": "Один или несколько выбранных объектов уже добавлены.",
     "invalid_selection": "Неверный выбор"
   }
 }
