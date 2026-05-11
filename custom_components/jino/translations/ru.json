@@ -1,0 +1,71 @@
+{
+  "config": {
+    "flow_title": "Настройка Джино",
+    "abort": {
+      "already_configured": "Этот аккаунт Джино уже настроен.",
+      "reconfigure_successful": "Повторная настройка выполнена успешно."
+    },
+    "error": {
+      "invalid_nightscout_accounts": "Некорректный JSON со списком аккаунтов Nightscout.",
+      "invalid_auth": "Неверный логин или пароль.",
+      "cannot_connect": "Не удалось подключиться.",
+      "required": "Это поле обязательно."
+    },
+    "step": {
+      "user": {
+        "title": "Настройка Джино",
+        "description": "Введите логин и пароль Джино.",
+        "data": {
+          "jino_login": "Логин Джино",
+          "jino_password": "Пароль Джино",
+          "scan_interval_minutes": "Интервал обновления, минут"
+        }
+      },
+      "nightscout_account": {
+        "title": "Настройка Nightscout",
+        "description": "При необходимости добавьте аккаунт Nightscout. Если авторизация отключена, а логин и пароль пустые, интеграция будет создана без сенсоров Nightscout.",
+        "data": {
+          "use_nightscout_auth": "Использовать авторизацию Nightscout",
+          "nightscout_login": "Логин Nightscout",
+          "nightscout_password": "Пароль Nightscout",
+          "add_another": "Добавить ещё один аккаунт",
+          "jino_data_parser": "Джино data parser"
+        }
+      },
+      "reconfigure": {
+        "title": "Повторная настройка Джино",
+        "description": "Обновите учётные данные и параметры.",
+        "data": {
+          "jino_login": "Логин Джино",
+          "jino_password": "Пароль Джино",
+          "scan_interval_minutes": "Интервал обновления, минут"
+        }
+      },
+      "reconfigure_nightscout_account": {
+        "title": "Повторная настройка Nightscout",
+        "description": "Обновите список аккаунтов Nightscout. Если авторизация отключена, а логин и пароль пустые, интеграция будет сохранена без сенсоров Nightscout.",
+        "data": {
+          "use_nightscout_auth": "Использовать авторизацию Nightscout",
+          "nightscout_login": "Логин Nightscout",
+          "nightscout_password": "Пароль Nightscout",
+          "add_another": "Добавить ещё один аккаунт",
+          "jino_data_parser": "Джино data parser"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметры Джино",
+        "description": "Измените интервал обновления.",
+        "data": {
+          "scan_interval_minutes": "Интервал обновления, минут"
+        }
+      }
+    },
+    "error": {
+      "invalid_nightscout_accounts": "Некорректный JSON со списком аккаунтов Nightscout."
+    }
+  }
+}
