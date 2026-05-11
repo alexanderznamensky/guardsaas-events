@@ -1,6 +1,6 @@
 {
   "domain": "guardsaas_events",
-  "name": "GuardSaaS Events",
+  "name": "GuardSaaS",
   "documentation": "https://github.com/alexanderznamensky/guardsaas_events",
   "issue_tracker": "https://github.com/alexanderznamensky/guardsaas_events/issues",
   "requirements": [
@@ -12,7 +12,7 @@
     "@alexanderznamensky"
   ],
   "iot_class": "cloud_polling",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "config_flow": true,
   "translations": [
     "en.json",
